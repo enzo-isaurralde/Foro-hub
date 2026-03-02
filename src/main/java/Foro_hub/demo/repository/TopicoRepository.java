@@ -1,6 +1,7 @@
 package Foro_hub.demo.repository;
 
 import Foro_hub.demo.model.Topico;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,4 +9,6 @@ import java.util.List;
 public interface TopicoRepository extends JpaRepository<Topico, Long> {
     List<Topico> findByAutorId(Long autorId);
     List<Topico> findByCursoId(Long cursoId);
+
+    boolean existsByTituloAndMensaje(@NotBlank String titulo, @NotBlank String mensaje);
 }
