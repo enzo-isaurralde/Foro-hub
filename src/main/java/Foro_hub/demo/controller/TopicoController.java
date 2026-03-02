@@ -27,7 +27,7 @@ public class TopicoController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    CursoRepository cursoRepository;
+    private CursoRepository cursoRepository;
 
     @PostMapping
     @Transactional
@@ -35,7 +35,7 @@ public class TopicoController {
         Usuario usuario = usuarioRepository.findById(datos.idUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Curso curso = cursoRepository.findById(datos.idCurso())
+        Curso curso = cursoRepository.findByNombreIgnoreCase(datos.nombreCurso())
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
         // Verificar duplicados
