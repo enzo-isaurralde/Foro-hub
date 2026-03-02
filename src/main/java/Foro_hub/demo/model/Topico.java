@@ -2,10 +2,7 @@ package Foro_hub.demo.model;
 
 import Foro_hub.demo.dto.DatosRegistroTopico;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +10,7 @@ import java.util.List;
 
 @Entity(name = "topico")
 @Table(name = "topicos")
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor  // ← Usa la anotación de Lombok en lugar de constructor manual
@@ -56,4 +53,5 @@ public class Topico {
         this.fechaCreacion = LocalDateTime.now();
         this.status = "ABIERTO";
     }
+
 }
