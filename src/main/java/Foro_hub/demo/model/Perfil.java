@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity(name = "perfil")
 @Table(name = "perfiles")
@@ -13,10 +14,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
-public class Perfil {
+public class Perfil implements GrantedAuthority {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    private String nombre; // Ejemplo: "ROLE_ADMIN", "ROLE_USER"
+
+    @Override
+    public String getAuthority() {
+        return nombre;
+    }
 }
