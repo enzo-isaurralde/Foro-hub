@@ -1,6 +1,4 @@
-package Foro_hub.demo.dto;
-
-import Foro_hub.demo.model.Topico;
+package Foro_hub.demo.domain.topico;
 
 public record DatosDetalleTopico(
         Long id,

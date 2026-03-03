@@ -1,6 +1,5 @@
-package Foro_hub.demo.dto;
+package Foro_hub.demo.domain.topico;
 
-import Foro_hub.demo.model.Topico;
 import java.time.LocalDateTime;
 
 public record DatosListadoTopico(

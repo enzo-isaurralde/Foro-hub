@@ -1,5 +1,7 @@
 package Foro_hub.demo.model;
 
+import Foro_hub.demo.domain.topico.Topico;
+import Foro_hub.demo.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

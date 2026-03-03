@@ -1,6 +1,8 @@
-package Foro_hub.demo.model;
+package Foro_hub.demo.domain.topico;
 
-import Foro_hub.demo.dto.DatosRegistroTopico;
+import Foro_hub.demo.domain.usuario.Usuario;
+import Foro_hub.demo.model.Curso;
+import Foro_hub.demo.model.Respuesta;
 import jakarta.persistence.*;
 import lombok.*;
 

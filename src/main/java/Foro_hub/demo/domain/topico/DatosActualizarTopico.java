@@ -1,7 +1,6 @@
-package Foro_hub.demo.dto;
+package Foro_hub.demo.domain.topico;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record DatosActualizarTopico(
         @NotBlank String titulo,

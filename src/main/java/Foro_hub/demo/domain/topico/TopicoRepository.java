@@ -1,6 +1,5 @@
-package Foro_hub.demo.repository;
+package Foro_hub.demo.domain.topico;
 
-import Foro_hub.demo.model.Topico;
 import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.data.jpa.repository.JpaRepository;

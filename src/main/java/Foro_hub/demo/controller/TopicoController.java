@@ -1,12 +1,10 @@
 package Foro_hub.demo.controller;
 
-import Foro_hub.demo.dto.*;
+import Foro_hub.demo.domain.topico.*;
 import Foro_hub.demo.model.Curso;
-import Foro_hub.demo.model.Topico;
-import Foro_hub.demo.model.Usuario;
+import Foro_hub.demo.domain.usuario.Usuario;
 import Foro_hub.demo.repository.CursoRepository;
-import Foro_hub.demo.repository.TopicoRepository;
-import Foro_hub.demo.repository.UsuarioRepository;
+import Foro_hub.demo.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

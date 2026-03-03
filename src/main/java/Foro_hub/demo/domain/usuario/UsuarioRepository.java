@@ -1,6 +1,5 @@
-package Foro_hub.demo.repository;
+package Foro_hub.demo.domain.usuario;
 
-import Foro_hub.demo.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
