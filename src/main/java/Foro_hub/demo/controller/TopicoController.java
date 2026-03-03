@@ -74,6 +74,7 @@ public class TopicoController {
         return topicoRepository.findAll(pageable)
                 .map(DatosListadoTopico::new);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaTopico> obtenerPorId(@PathVariable Long id) {
         Topico topico = topicoRepository.findById(id)
@@ -81,6 +82,7 @@ public class TopicoController {
 
         return ResponseEntity.ok(new DatosRespuestaTopico(topico));
     }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DatosRespuestaTopico> actualizar(
@@ -110,8 +112,32 @@ public class TopicoController {
         return ResponseEntity.ok(new DatosRespuestaTopico(topico));
     }
 
+    @PutMapping
+    @Transactional
+    public ResponseEntity<DatosRespuestaTopico> actualizarTopico(@RequestBody @Valid DatosActualizarTopico datos) {
+        Topico topico = topicoRepository.findById(datos.id())
+                .orElseThrow(() -> new RuntimeException("Tópico no encontrado"));
 
+        // Actualizar campos básicos
+        topico.setTitulo(datos.titulo());
+        topico.setMensaje(datos.mensaje());
+        topico.setStatus(datos.estado());
 
+        // Buscar el curso por nombre en la BD
+        Curso curso = cursoRepository.findByNombreIgnoreCase(datos.nombreCurso())
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        // Asignar el curso a la entidad
+        topico.setCurso(curso);
+
+        // Guardar cambios (opcional, con @Transactional se persiste igual)
+        topicoRepository.save(topico);
+
+        // Crear DTO de respuesta directamente desde la entidad
+        DatosRespuestaTopico respuesta = new DatosRespuestaTopico(topico);
+
+        return ResponseEntity.ok(respuesta);
+    }
 
 
 }

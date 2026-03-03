@@ -17,7 +17,7 @@ public record DatosRespuestaTopico(
                 topico.getMensaje(),
                 topico.getFechaCreacion().toString(),
                 topico.getAutor().getNombre(),
-                topico.getCurso().getNombre()
+                topico.getCurso().getNombre() // ✅ aquí accedés al nombre del curso
         );
     }
 }
