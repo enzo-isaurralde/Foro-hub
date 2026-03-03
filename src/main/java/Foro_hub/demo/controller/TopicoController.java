@@ -15,9 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -32,7 +35,9 @@ public class TopicoController {
     @Autowired
     private CursoRepository cursoRepository;
 
-    // Crear un tópico
+    // ============================================
+    // POST: Crear tópico
+    // ============================================
     @PostMapping
     @Transactional
     public ResponseEntity<DatosDetalleTopico> crear(@RequestBody @Valid DatosRegistroTopico datos) {
@@ -51,12 +56,30 @@ public class TopicoController {
         var topico = new Topico(datos, usuario, curso);
         topicoRepository.save(topico);
 
-        return ResponseEntity.ok(new DatosDetalleTopico(topico));
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(topico.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new DatosDetalleTopico(topico));
     }
 
-    // Listar tópicos filtrando por curso y año
+    // ============================================
+    // GET: Listar todos (con paginación)
+    // ============================================
+    @GetMapping
+    public Page<DatosListadoTopico> listarTopicos(
+            @PageableDefault(size = 10, sort = "fechaCreacion") Pageable pageable) {
+        return topicoRepository.findAll(pageable)
+                .map(DatosListadoTopico::new);
+    }
+
+    // ============================================
+    // GET: Buscar por curso y año
+    // ============================================
     @GetMapping("/buscar")
-    public Page<Topico> buscarPorCursoYAño(
+    public Page<DatosListadoTopico> buscarPorCursoYAño(
             @RequestParam String curso,
             @RequestParam int anio,
             Pageable pageable) {
@@ -64,16 +87,14 @@ public class TopicoController {
         LocalDateTime inicio = LocalDateTime.of(anio, Month.JANUARY, 1, 0, 0);
         LocalDateTime fin = LocalDateTime.of(anio, Month.DECEMBER, 31, 23, 59);
 
-        return topicoRepository.findByCurso_NombreAndFechaCreacionBetween(curso, inicio, fin, pageable);
-    }
-
-
-    @GetMapping
-    public Page<DatosListadoTopico> listarTopicos(
-            @PageableDefault(size = 10, sort = "fechaCreacion") Pageable pageable) {
-        return topicoRepository.findAll(pageable)
+        return topicoRepository.findByCurso_NombreAndFechaCreacionBetween(curso, inicio, fin, pageable)
                 .map(DatosListadoTopico::new);
     }
+
+
+    // ============================================
+    // GET: Detalle por ID
+    // ============================================
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaTopico> obtenerPorId(@PathVariable Long id) {
         Topico topico = topicoRepository.findById(id)
@@ -81,6 +102,10 @@ public class TopicoController {
 
         return ResponseEntity.ok(new DatosRespuestaTopico(topico));
     }
+
+    // ============================================
+    // PUT: Actualizar tópico (ÚNICO - por ID en URL)
+    // ============================================
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DatosRespuestaTopico> actualizar(
@@ -90,28 +115,37 @@ public class TopicoController {
         Topico topico = topicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tópico no encontrado"));
 
-        // Actualizar campos
-        topico.setTitulo(datos.titulo());
-        topico.setMensaje(datos.mensaje());
-
+        if (datos.titulo() != null) {
+            topico.setTitulo(datos.titulo());
+        }
+        if (datos.mensaje() != null) {
+            topico.setMensaje(datos.mensaje());
+        }
         if (datos.estado() != null) {
             topico.setStatus(datos.estado());
         }
-
         if (datos.nombreCurso() != null) {
             Curso curso = cursoRepository.findByNombreIgnoreCase(datos.nombreCurso())
                     .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
             topico.setCurso(curso);
         }
 
-        // Guardar cambios
-        topicoRepository.save(topico);
-
         return ResponseEntity.ok(new DatosRespuestaTopico(topico));
     }
 
+    // ============================================
+    // DELETE: Eliminar tópico
+    // ============================================
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        Optional<Topico> topicoOptional = topicoRepository.findById(id);
 
+        if (!topicoOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
 
-
-
+        topicoRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
